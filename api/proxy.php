@@ -1,3 +1,4 @@
+header("Access-Control-Allow-Origin: *");
 <?php
 $url = $_GET['url'] ?? '';
 
