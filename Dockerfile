@@ -1,11 +1,12 @@
-# PHP এবং Apache সহ অফিশিয়াল ইমেজ ব্যবহার করছি
 FROM php:8.2-apache
 
-# আপনার সব ফাইল কন্টেইনারের ভেতরে কপি করা হচ্ছে
+# আপনার সব ফাইল কপি করা হচ্ছে
 COPY . /var/www/html/
 
-# Apache এর জন্য পারমিশন ঠিক করা
-RUN chown -R www-data:www-data /var/www/html/
+# Apache কে বলা হচ্ছে api ফোল্ডারটি ব্যবহার করতে
+ENV APACHE_DOCUMENT_ROOT /var/www/html/api
+RUN sed -ri -e 's!/var/www/html!${APACHE_DOCUMENT_ROOT}!g' /etc/apache2/sites-available/*.conf
+RUN sed -ri -e 's!/var/www/html!${APACHE_DOCUMENT_ROOT}!g' /etc/apache2/apache2.conf /etc/apache2/conf-available/*.conf
 
-# পোর্ট ৮০ এক্সপোজ করা
+RUN chown -R www-data:www-data /var/www/html/
 EXPOSE 80
