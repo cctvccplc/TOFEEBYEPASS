@@ -1,5 +1,8 @@
 <?php
 header("Access-Control-Allow-Origin: *");
+header("Access-Control-Allow-Methods: GET");
+header("Content-Type: application/vnd.apple.mpegurl"); // ব্রাউজারকে জানানো যে এটি ভিডিও ফাইল
+
 if (isset($_GET['url'])) {
     $url = $_GET['url'];
     $userAgent = "Mozilla/5.0 (Linux; Android 9; Redmi S2 Build/PKQ1.181203.001) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/135.0.7049.79 Mobile Safari/537.36";
@@ -8,14 +11,22 @@ if (isset($_GET['url'])) {
     $opts = [
         "http" => [
             "method" => "GET",
-            "header" => "User-Agent: $userAgent\r\n" . "Cookie: $cookie\r\n"
+            "header" => "User-Agent: $userAgent\r\n" . 
+                        "Cookie: $cookie\r\n" .
+                        "Referer: https://toffeelive.com/\r\n" // অনেক সময় রেফারার প্রয়োজন হয়
         ]
     ];
 
     $context = stream_context_create($opts);
-    $data = file_get_contents($url, false, $context);
+    $data = @file_get_contents($url, false, $context);
     
-    // মডিফাই করা যাতে সব সেগমেন্ট লোড হয়
-    echo $data;
+    if ($data === FALSE) {
+        header("HTTP/1.1 500 Internal Server Error");
+        echo "Error: Could not fetch stream. Maybe cookie expired.";
+    } else {
+        echo $data;
+    }
+} else {
+    echo "No URL provided.";
 }
 ?>
