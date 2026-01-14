@@ -1,0 +1,23 @@
+#EXTM3U
+#EXT-X-VERSION:3
+
+#EXTINF:-1 tvg-logo="https://images.toffeelive.com/images/program/19779/logo/240x240/mobile_logo_975410001725875598.png" group-title="LIVE", TOFFEE Sports VIP
+#EXTVLCOPT:http-user-agent=okhttp/4.11.0
+#EXTVLCOPT:http-referrer=https://bldcmprod-cdn.toffeelive.com
+#EXTVLCOPT:http-cookie=Edge-Cache-Cookie=URLPrefix=aHR0cHM6Ly9ibGRjbXByb2QtY2RuLnRvZmZlZWxpdmUuY29t:Expires=1768588692:KeyName=prod_linear:Signature=ZNr-SFCNtzxlqmhZ_Eq0FFP8ZGfInxWoZOJXe8vY6kRjOhshI9fSLr2mAgEuTC0fXqpSHd5BrJQB2JkkLA-WBg
+https://bldcmprod-cdn.toffeelive.com/cdn/live/sports_highlights/playlist.m3u8
+
+#EXTINF:-1 tvg-logo="https://assets-prod.services.toffeelive.com//Xi_Ga5oBNnOkwJLWkhKP/posters/ef2899d5-1ae0-4fee-aee5-45f9b0b3ba80.png" group-title="News Channel", Somoy TV
+#EXTVLCOPT:http-user-agent=okhttp/4.11.0
+#EXTVLCOPT:http-cookie=Edge-Cache-Cookie=URLPrefix=aHR0cHM6Ly9ibGRjbXByb2QtY2RuLnRvZmZlZWxpdmUuY29t:Expires=1768588692:KeyName=prod_linear:Signature=ZNr-SFCNtzxlqmhZ_Eq0FFP8ZGfInxWoZOJXe8vY6kRjOhshI9fSLr2mAgEuTC0fXqpSHd5BrJQB2JkkLA-WBg
+https://bldcmprod-cdn.toffeelive.com/cdn/live/somoy_tv/playlist.m3u8
+
+#EXTINF:-1 tvg-logo="https://images.toffeelive.com/images/program/603/logo/240x240/mobile_logo_237244001666780563.png" group-title="Sports Channels", SONY SPORTS TEN 1 HD
+#EXTVLCOPT:http-user-agent=okhttp/4.11.0
+#EXTVLCOPT:http-cookie=Edge-Cache-Cookie=URLPrefix=aHR0cHM6Ly9ibGRjbXByb2QtY2RuLnRvZmZlZWxpdmUuY29t:Expires=1768588692:KeyName=prod_linear:Signature=ZNr-SFCNtzxlqmhZ_Eq0FFP8ZGfInxWoZOJXe8vY6kRjOhshI9fSLr2mAgEuTC0fXqpSHd5BrJQB2JkkLA-WBg
+https://bldcmprod-cdn.toffeelive.com/cdn/live/sony_sports_1_hd/playlist.m3u8
+
+#EXTINF:-1 tvg-logo="https://assets-prod.services.toffeelive.com/w_640,q_75,f_webp/qnv835oBcqxnFHJBuQcB/posters/348dfac3-c1e0-485d-a72b-3d282c9e2c73.png" group-title="বাংলাদেশী চ্যানেল", Channel i
+#EXTVLCOPT:http-user-agent=okhttp/4.11.0
+#EXTVLCOPT:http-cookie=Edge-Cache-Cookie=URLPrefix=aHR0cHM6Ly9ibGRjbXByb2QtY2RuLnRvZmZlZWxpdmUuY29t:Expires=1768588692:KeyName=prod_linear:Signature=ZNr-SFCNtzxlqmhZ_Eq0FFP8ZGfInxWoZOJXe8vY6kRjOhshI9fSLr2mAgEuTC0fXqpSHd5BrJQB2JkkLA-WBg
+https://bldcmprod-cdn.toffeelive.com/cdn/live/channel_i/playlist.m3u8
