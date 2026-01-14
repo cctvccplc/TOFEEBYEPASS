@@ -5,17 +5,8 @@
     }
   },
   "routes": [
-    {
-      "src": "/",
-      "dest": "/api/index.php"
-    },
-    {
-      "src": "/proxy.php",
-      "dest": "/api/proxy.php"
-    },
-    {
-      "src": "/(.*)",
-      "dest": "/api/$1"
-    }
+    { "src": "/", "dest": "/api/index.php" },
+    { "src": "/proxy.php", "dest": "/api/proxy.php" },
+    { "src": "/(.*)", "dest": "/api/$1" }
   ]
 }
