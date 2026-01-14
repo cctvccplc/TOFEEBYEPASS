@@ -1,49 +1,81 @@
+<?php
+// ১. M3U ফাইলটি পড়া (ছোট হাতের নাম নিশ্চিত করুন)
+$m3u_file = '../tofee.m3u'; 
+if (file_exists($m3u_file)) {
+    $m3u_content = file_get_contents($m3u_file);
+} else {
+    die("Error: tofee.m3u file not found in root!");
+}
+
+// ২. চ্যানেল স্ক্র্যাপ করা (Regex ব্যবহার করে)
+preg_match_all('/#EXTINF:.*tvg-logo="(.*?)".*,(.*)\n(?:#EXTVLCOPT:.*\n|#EXTHTTP:.*\n)*(http.*)/', $m3u_content, $matches);
+?>
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Premium IPTV Player</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Toffee Premium Player</title>
     <link href="https://vjs.zencdn.net/7.20.3/video-js.css" rel="stylesheet" />
-    <style>body{background:#000; color:#fff; text-align:center; font-family:sans-serif;}</style>
+    <style>
+        body { background: #000; color: #fff; font-family: sans-serif; margin: 0; padding: 0; }
+        .header { background: #cc0000; padding: 15px; text-align: center; font-size: 20px; font-weight: bold; }
+        #player-container { width: 100%; max-width: 800px; margin: 10px auto; display: none; }
+        .channel-list { display: grid; grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); gap: 10px; padding: 20px; }
+        .channel-item { background: #1a1a1a; padding: 10px; border-radius: 8px; text-align: center; cursor: pointer; transition: 0.3s; }
+        .channel-item:hover { background: #333; transform: scale(1.05); }
+        .channel-item img { width: 60px; height: 60px; object-fit: contain; }
+        .channel-item p { font-size: 12px; margin-top: 8px; }
+    </style>
 </head>
 <body>
-    <h1>Toffee Live Web Player</h1>
-    <video id="player" class="video-js vjs-default-skin vjs-big-play-centered" controls width="800" height="450">
-        <source src="proxy.php?url=https://bldcmprod-cdn.toffeelive.com/cdn/live/sony_sports_1_hd/playlist.m3u8" type="application/x-mpegURL">
-    </video>
-    <script src="https://vjs.zencdn.net/7.20.3/video.min.js"></script>
+
+<div class="header">TOFFEE LIVE WEB</div>
+
+<div id="player-container">
+    <video id="my-player" class="video-js vjs-default-skin vjs-16-9 vjs-big-play-centered" controls preload="auto"></video>
+    <button onclick="closePlayer()" style="width:100%; background:red; color:white; border:none; padding:10px; cursor:pointer;">CLOSE PLAYER</button>
+</div>
+
+<div class="channel-list">
+    <?php
+    for ($i = 0; $i < count($matches[1]); $i++) {
+        $logo = $matches[1][$i];
+        $name = $matches[2][$i];
+        $url = trim($matches[3][$i]);
+        echo '<div class="channel-item" onclick="playVideo(\''.urlencode($url).'\')">
+                <img src="'.$logo.'" onerror="this.src=\'https://via.placeholder.com/60\'">
+                <p>'.$name.'</p>
+              </div>';
+    }
+    ?>
+</div>
+
 <script src="https://vjs.zencdn.net/7.20.3/video.min.js"></script>
-
 <script>
-    // ১. ভিডিও প্লেয়ার ইনিশিয়ালাইজ করা
-    var player = videojs('my-video', {
-        fluid: true, // স্ক্রিন অনুযায়ী প্লেয়ার ছোট-বড় হবে
-        autoplay: false,
-        controls: true
-    });
+    // ভিডিও প্লেয়ার সেটআপ
+    var player = videojs('my-player');
 
-    // ২. চ্যানেল ক্লিক করলে ভিডিও প্লে করার ফাংশন
     function playVideo(streamUrl) {
-        // প্লেয়ারের কন্টেইনারটি শো করা (যদি হাইড থাকে)
         document.getElementById('player-container').style.display = 'block';
-
-        // প্রক্সি স্ক্রিপ্টের মাধ্যমে লিঙ্ক সেট করা
-        // এখানে 'proxy.php' ব্যবহার করা হয়েছে কারণ index.php ও proxy.php একই ফোল্ডারে আছে
+        
+        // ডিকোড করে প্রক্সিতে পাঠানো
+        var finalUrl = 'proxy.php?url=' + streamUrl;
+        
         player.src({
-            src: 'proxy.php?url=' + encodeURIComponent(streamUrl),
+            src: finalUrl,
             type: 'application/x-mpegURL'
         });
-
-        // ভিডিও প্লে করা
+        
         player.play();
-
-        // পেজের একদম উপরে নিয়ে যাওয়া যাতে প্লেয়ার দেখা যায়
         window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
-    // ৩. প্লেয়ার বন্ধ করার ফাংশন
     function closePlayer() {
         player.pause();
         document.getElementById('player-container').style.display = 'none';
     }
-</script></body>
+</script>
+
+</body>
 </html>
