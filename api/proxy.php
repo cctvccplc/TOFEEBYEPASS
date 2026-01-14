@@ -1,32 +1,31 @@
 <?php
-header("Access-Control-Allow-Origin: *");
-header("Access-Control-Allow-Methods: GET");
-header("Content-Type: application/vnd.apple.mpegurl"); // ব্রাউজারকে জানানো যে এটি ভিডিও ফাইল
+$url = $_GET['url'] ?? '';
 
-if (isset($_GET['url'])) {
-    $url = $_GET['url'];
-    $userAgent = "Mozilla/5.0 (Linux; Android 9; Redmi S2 Build/PKQ1.181203.001) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/135.0.7049.79 Mobile Safari/537.36";
-    $cookie = "Edge-Cache-Cookie=URLPrefix=aHR0cHM6Ly9ibGRjbXByb2QtY2RuLnRvZmZlZWxpdmUuY29t:Expires=1768591340:KeyName=prod_linear:Signature=N2pe6EUZ4gRrLQtQXKmDfuLaRcDMcOlciOD5QV7v8iDQJPQHzOieViNZDUNjKca4hmOyxa3M5dEOyW6_9OeRDA";
-
-    $opts = [
-        "http" => [
-            "method" => "GET",
-            "header" => "User-Agent: $userAgent\r\n" . 
-                        "Cookie: $cookie\r\n" .
-                        "Referer: https://toffeelive.com/\r\n" // অনেক সময় রেফারার প্রয়োজন হয়
-        ]
-    ];
-
-    $context = stream_context_create($opts);
-    $data = @file_get_contents($url, false, $context);
-    
-    if ($data === FALSE) {
-        header("HTTP/1.1 500 Internal Server Error");
-        echo "Error: Could not fetch stream. Maybe cookie expired.";
-    } else {
-        echo $data;
-    }
-} else {
-    echo "No URL provided.";
+if (!$url) {
+    die("No URL provided.");
 }
+
+// URL টি ডিকোড করা
+$url = urldecode($url);
+
+$ch = curl_init();
+curl_setopt($ch, CURLOPT_URL, $url);
+curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
+
+// Toffee-র জন্য প্রয়োজনীয় হেডারসমূহ
+curl_setopt($ch, CURLOPT_HTTPHEADER, [
+    "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/119.0.0.0 Safari/537.36",
+    "Referer: https://toffeelive.com/",
+    "Origin: https://toffeelive.com/",
+    "Cookie: YOUR_TOFFEE_COOKIE_HERE" // এখানে আপনার আপডেট করা কুকি বসাতে হবে
+]);
+
+$response = curl_exec($ch);
+$content_type = curl_getinfo($ch, CURLINFO_CONTENT_TYPE);
+curl_close($ch);
+
+// ভিডিও প্লেয়ারকে কন্টেন্ট টাইপ জানানো
+header("Content-Type: " . $content_type);
+echo $response;
 ?>
