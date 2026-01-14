@@ -1,31 +1,21 @@
 <?php
-header("Access-Control-Allow-Origin: *");
-header("Content-Type: application/vnd.apple.mpegurl");
+// সেটআপ ইউজার এজেন্ট (Toffee সাধারণত এটি চেক করে)
+$userAgent = 'Toffee/1.0.0 (Android 10; Mobile)';
 
-$url = $_GET['url'] ?? '';
-if (!$url) die("No URL provided.");
+// আপনার টার্গেট M3U লিংক
+$m3u_url = 'https://raw.githubusercontent.com/BINOD-XD/Toffee-Auto-Update-Playlist/refs/heads/main/toffee_OTT_Navigator.m3u';
 
-$url = urldecode($url);
-
+// cURL দিয়ে ডাটা ফেচ করা
 $ch = curl_init();
-curl_setopt($ch, CURLOPT_URL, $url);
+curl_setopt($ch, CURLOPT_URL, $m3u_url);
 curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+curl_setopt($ch, CURLOPT_USERAGENT, $userAgent);
 curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
-curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-curl_setopt($ch, CURLOPT_USERAGENT, "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/119.0.0.0 Safari/537.36");
 
-// Toffee কে বুঝানো হচ্ছে যে রিকোয়েস্টটি তাদের সাইট থেকেই আসছে
-curl_setopt($ch, CURLOPT_HTTPHEADER, [
-    "Referer: https://toffeelive.com/",
-    "Origin: https://toffeelive.com/"
-]);
-
-$response = curl_exec($ch);
+$data = curl_exec($ch);
 curl_close($ch);
 
-// ভিডিওর ভেতরের লিঙ্কগুলোকে প্রক্সির মাধ্যমে রি-রাইট করা (যাতে লোডিং না আটকে থাকে)
-$base_url = dirname($url) . '/';
-$response = preg_replace('/(?<!http)([\w\-]+\.ts|[\w\-]+\.m3u8)/', $base_url . '$1', $response);
-
-echo $response;
+// কন্টেন্ট টাইপ সেট করা যাতে প্লেয়ার বুঝতে পারে এটি M3U ফাইল
+header('Content-Type: audio/x-mpegurl');
+echo $data;
 ?>
